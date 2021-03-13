@@ -15,8 +15,7 @@ import (
 )
 
 const (
-    defaultHost  = "localhost"
-    defaultPort = "10051"
+    defaultHost  = "localhost:10051"
     agentActive = true
     trapper     = false
 )
@@ -28,7 +27,7 @@ func main() {
     metrics = append(metrics, zabbix.NewMetric("localhost", "someTrapper", "3.14", trapper))
 
     // Send metrics to zabbix
-    z := zabbix.NewSender(defaultHost, defaultPort)
+    z := zabbix.NewSender(defaultHost)
     resActive, errActive, resTrapper, errTrapper := z.SendMetrics(metrics)
 
     fmt.Printf("Agent active, response=%s, info=%s, error=%v\n", resActive.Response,resActive.Info, errActive)

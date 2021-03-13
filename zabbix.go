@@ -127,17 +127,15 @@ func (p *Packet) DataLen() []byte {
 // Sender class
 type Sender struct {
 	Host           string
-	Port           string
 	ConnectTimeout time.Duration
 	ReadTimeout    time.Duration
 	WriteTimeout   time.Duration
 }
 
 // NewSender return a sender object to send metrics using default values for timeouts
-func NewSender(host string, port string) *Sender {
+func NewSender(host string) *Sender {
 	return &Sender{
 		Host:           host,
-		Port:           port,
 		ConnectTimeout: defaultConnectTimeout,
 		ReadTimeout:    defaultReadTimeout,
 		WriteTimeout:   defaultWriteTimeout,
@@ -147,14 +145,12 @@ func NewSender(host string, port string) *Sender {
 // NewSenderTimeout return a sender object to send metrics defining values for timeouts
 func NewSenderTimeout(
 	host string,
-	port string,
 	connectTimeout time.Duration,
 	readTimeout time.Duration,
 	writeTimeout time.Duration,
 ) *Sender {
 	return &Sender{
 		Host:           host,
-		Port:           port,
 		ConnectTimeout: connectTimeout,
 		ReadTimeout:    readTimeout,
 		WriteTimeout:   writeTimeout,
@@ -210,7 +206,7 @@ func (s *Sender) SendMetrics(metrics []*Metric) (resActive Response, errActive e
 // Send connects to Zabbix, send the data, return the response and close the connection
 func (s *Sender) Send(packet *Packet) (res Response, err error) {
 	// Timeout to resolve and connect to the server
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", s.Host, s.Port), s.ConnectTimeout)
+	conn, err := net.DialTimeout("tcp", s.Host, s.ConnectTimeout)
 	if err != nil {
 		return res, fmt.Errorf("connecting to server (timeout=%v): %v", s.ConnectTimeout, err)
 	}

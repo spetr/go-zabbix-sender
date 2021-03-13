@@ -24,11 +24,10 @@ type ZabbixRequest struct {
 }
 
 func TestSendActiveMetric(t *testing.T) {
-	zabbixHost := "127.0.0.1"
-	zabbixPort := "10051"
+	zabbixHost := "127.0.0.1:10051"
 
 	// Simulate a Zabbix server to get the data sent
-	listener, lerr := net.Listen("tcp", fmt.Sprintf("%v:%v", zabbixHost, zabbixPort))
+	listener, lerr := net.Listen("tcp", zabbixHost)
 	if lerr != nil {
 		t.Fatal(lerr)
 	}
@@ -95,7 +94,7 @@ func TestSendActiveMetric(t *testing.T) {
 
 	m := NewMetric("zabbixAgent1", "ping", "13", true)
 
-	s := NewSender(zabbixHost, zabbixPort)
+	s := NewSender(zabbixHost)
 	resActive, errActive, resTrapper, errTrapper := s.SendMetrics([]*Metric{m})
 	if errActive != nil {
 		t.Fatalf("error sending active metric: %v", errActive)
@@ -132,11 +131,10 @@ func TestSendActiveMetric(t *testing.T) {
 }
 
 func TestSendTrapperMetric(t *testing.T) {
-	zabbixHost := "127.0.0.1"
-	zabbixPort := "10051"
+	zabbixHost := "127.0.0.1:10051"
 
 	// Simulate a Zabbix server to get the data sent
-	listener, lerr := net.Listen("tcp", fmt.Sprintf("%v:%v", zabbixHost, zabbixPort))
+	listener, lerr := net.Listen("tcp", zabbixHost)
 	if lerr != nil {
 		t.Fatal(lerr)
 	}
@@ -202,7 +200,7 @@ func TestSendTrapperMetric(t *testing.T) {
 
 	m := NewMetric("zabbixAgent1", "ping", "13", false)
 
-	s := NewSender(zabbixHost, zabbixPort)
+	s := NewSender(zabbixHost)
 	resActive, errActive, resTrapper, errTrapper := s.SendMetrics([]*Metric{m})
 	if errTrapper != nil {
 		t.Fatalf("error sending trapper metric: %v", errTrapper)
@@ -239,11 +237,10 @@ func TestSendTrapperMetric(t *testing.T) {
 }
 
 func TestSendActiveAndTrapperMetric(t *testing.T) {
-	zabbixHost := "127.0.0.1"
-	zabbixPort := "10051"
+	zabbixHost := "127.0.0.1:10051"
 
 	// Simulate a Zabbix server to get the data sent
-	listener, lerr := net.Listen("tcp", fmt.Sprintf("%v:%v", zabbixHost, zabbixPort))
+	listener, lerr := net.Listen("tcp", zabbixHost)
 	if lerr != nil {
 		t.Fatal(lerr)
 	}
@@ -314,7 +311,7 @@ func TestSendActiveAndTrapperMetric(t *testing.T) {
 	m := NewMetric("zabbixAgent1", "ping", "13", true)
 	m2 := NewMetric("zabbixTrapper1", "pong", "13", false)
 
-	s := NewSender(zabbixHost, zabbixPort)
+	s := NewSender(zabbixHost)
 	resActive, errActive, resTrapper, errTrapper := s.SendMetrics([]*Metric{m, m2})
 
 	if errActive != nil {
@@ -362,11 +359,10 @@ func TestSendActiveAndTrapperMetric(t *testing.T) {
 }
 
 func TestRegisterHostOK(t *testing.T) {
-	zabbixHost := "127.0.0.1"
-	zabbixPort := "10051"
+	zabbixHost := "127.0.0.1:10051"
 
 	// Simulate a Zabbix server to get the data sent
-	listener, lerr := net.Listen("tcp", fmt.Sprintf("%v:%v", zabbixHost, zabbixPort))
+	listener, lerr := net.Listen("tcp", zabbixHost)
 	if lerr != nil {
 		t.Fatal(lerr)
 	}
@@ -438,7 +434,7 @@ func TestRegisterHostOK(t *testing.T) {
 		errs <- nil
 	}(errs)
 
-	s := NewSender(zabbixHost, zabbixPort)
+	s := NewSender(zabbixHost)
 	err := s.RegisterHost("prueba", "prueba")
 	if err != nil {
 		t.Fatalf("register host error: %v", err)
@@ -452,11 +448,10 @@ func TestRegisterHostOK(t *testing.T) {
 }
 
 func TestRegisterHostError(t *testing.T) {
-	zabbixHost := "127.0.0.1"
-	zabbixPort := "10051"
+	zabbixHost := "127.0.0.1:10051"
 
 	// Simulate a Zabbix server to get the data sent
-	listener, lerr := net.Listen("tcp", fmt.Sprintf("%v:%v", zabbixHost, zabbixPort))
+	listener, lerr := net.Listen("tcp", zabbixHost)
 	if lerr != nil {
 		t.Fatal(lerr)
 	}
@@ -522,7 +517,7 @@ func TestRegisterHostError(t *testing.T) {
 		errs <- nil
 	}(errs)
 
-	s := NewSender(zabbixHost, zabbixPort)
+	s := NewSender(zabbixHost)
 	err := s.RegisterHost("prueba", "prueba")
 	if err == nil {
 		t.Fatalf("should return an error: %v", err)
@@ -536,11 +531,10 @@ func TestRegisterHostError(t *testing.T) {
 }
 
 func TestInvalidResponseHeader(t *testing.T) {
-	zabbixHost := "127.0.0.1"
-	zabbixPort := "10051"
+	zabbixHost := "127.0.0.1:10051"
 
 	// Simulate a Zabbix server to get the data sent
-	listener, lerr := net.Listen("tcp", fmt.Sprintf("%v:%v", zabbixHost, zabbixPort))
+	listener, lerr := net.Listen("tcp", zabbixHost)
 	if lerr != nil {
 		t.Fatal(lerr)
 	}
@@ -607,7 +601,7 @@ func TestInvalidResponseHeader(t *testing.T) {
 
 	m := NewMetric("zabbixAgent1", "ping", "13", true)
 
-	s := NewSender(zabbixHost, zabbixPort)
+	s := NewSender(zabbixHost)
 	_, errActive, _, _ := s.SendMetrics([]*Metric{m})
 	if errActive == nil {
 		t.Fatal("Expected an error because an incorrect Zabbix protocol header")
