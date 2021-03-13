@@ -1,6 +1,5 @@
 # zabbix-sender
 
-==============================================================================
 Golang package, implement zabbix sender protocol for send metrics to zabbix.
 
 Example:
