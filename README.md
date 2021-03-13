@@ -15,8 +15,8 @@ import (
 )
 
 const (
-    defaultHost  = `localhost`
-    defaultPort = 10051
+    defaultHost  = "localhost"
+    defaultPort = "10051"
     agentActive = true
     trapper     = false
 )
